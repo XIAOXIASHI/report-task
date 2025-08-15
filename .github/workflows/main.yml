@@ -1,0 +1,24 @@
+name: 每日报告生成
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 国际标准时间2点 = 北京时间10点
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 设置Python环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas jinja2 pdfkit
+      - name: 执行脚本
+        run: python 生成并购重组PDF报告.py
+      - name: 保存结果
+        uses: actions/upload-artifact@v3
+        with:
+          name: report-files
+          path: ./*.pdf  # 自动保存生成的PDF文件
