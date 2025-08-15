@@ -18,6 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name:安装系统依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wkhtmltopdf libxrender1 libfontconfig1
       
       - name: 设置Python环境
         uses: actions/setup-python@v5
