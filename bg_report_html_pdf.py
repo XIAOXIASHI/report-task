@@ -298,7 +298,10 @@ class WechatSender:
 def main():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
-    WEBHOOK_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=591c96ad-d26f-475d-935e-1e838061b6f7"
+    #测试群机器人
+    #WEBHOOK_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=591c96ad-d26f-475d-935e-1e838061b6f7"
+    #正式群机器人
+    WEBHOOK_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=46b66748-77b2-4db1-a86b-fd26e01bde81"
 
     class Config:
         def get_log_level(self):
