@@ -37,6 +37,14 @@ jobs:
       - name: 验证wkhtmltopdf安装
         run: |
           wkhtmltopdf --version  # 检查是否安装成功
+          
+      - name: 修复权限问题
+        run: |
+          sudo chmod +x /usr/bin/wkhtmltopdf
+          
+      - name: 安装中文字体
+        run: |
+           sudo apt-get install -y fonts-wqy-zenhei  # 安装文泉驿正黑字体
     
           
       - name: 执行脚本
