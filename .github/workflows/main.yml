@@ -2,6 +2,7 @@ name: 并购数据日报__html_pdf
 on:
   schedule:
     - cron: '00 08 * * *'  # （北京时间8点）
+  
   workflow_dispatch:
     inputs:
       test_mode:
@@ -12,12 +13,17 @@ on:
         options:
           - 'yes'
           - 'no'
+env: 
+    TZ: Asia/Shanghai  # 全局设置时区为北京时间
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: 验证时区
+        run: date  # 输出应为北京时间
     
       - name: 缓存APT依赖
         uses: actions/cache@v3
@@ -60,6 +66,11 @@ jobs:
           
       - name: 执行脚本
         run: python bg_report_html_pdf.py
+        
+      - name: 验证时间设置
+        run: |
+          echo "系统时间: $(date)"
+          echo "Python时间: $(python -c 'from datetime import datetime; print(datetime.now())')"
         
       - name: 保存结果
         uses: actions/upload-artifact@v4  # 已更新为v4版本
