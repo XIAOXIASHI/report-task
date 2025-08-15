@@ -35,8 +35,8 @@ jobs:
           pip install requests pandas jinja2 pdfkit python-dotenv  # 添加了python-dotenv
 
       - name: 验证wkhtmltopdf安装
-          run: |
-            wkhtmltopdf --version  # 检查是否安装成功
+        run: |
+          wkhtmltopdf --version  # 检查是否安装成功
     
           
       - name: 执行脚本
