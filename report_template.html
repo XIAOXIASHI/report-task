@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{{ title }} - {{ date }}</title>
+    <style>
+        :root {
+            --primary-color: #2c6ecb;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --hover-bg: #eef5ff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #ddd;
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--text-dark);
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .overview {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .method-distribution {
+            margin-top: 15px;
+            padding-left: 10px;
+        }
+
+        .method-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            background-color: #e3f2fd;
+            color: var(--primary-color);
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            table-layout: auto;
+        }
+
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            word-wrap: break-word;
+            white-space: normal;
+            font-size: 0.9em;
+        }
+
+        /* 为第三部分表格中的链接移除默认间距 */
+        .data-table td.related-links a {
+            display: block; /* 使链接块级显示，实现换行效果 */
+            margin: 0; /* 移除所有外边距 */
+            padding: 2px 0; /* 仅保留上下内边距 */
+        }
+
+        .data-table tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .case {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .case h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--light-bg);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .amount-highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: var(--text-light);
+            padding-left: 20px;
+        }
+
+        .guangdong-note {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>{{ title }} - {{ date }}</h1>
+
+    <div class="section">
+        <h2>一、数据概览</h2>
+        <div class="overview">
+            {% set overview_text = analysis.basic_overview %}
+            {% if '今日共获取' in overview_text and '条并购重组数据' in overview_text %}
+                {% set count_part = overview_text.split('今日共获取')[1].split('条并购重组数据')[0] %}
+                <p>今日共获取<span class="highlight">{{ count_part }}</span>条并购重组数据，其中，涉广东公司并购数据共<span class="highlight">{{ analysis.guangdong_count }}</span>条。</p>
+            {% else %}
+                <p>{{ analysis.basic_overview }}</p>
+            {% endif %}
+
+            {% if analysis.method_distribution %}
+            <div class="method-distribution">
+                <strong style="display: block; margin-bottom: 10px;">并购方式分布</strong>
+                {% for method, count in analysis.method_distribution.items() %}
+                <span class="method-tag">{{ method }}: {{ count }}次</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>二、今日广东公司并购案例</h2>
+        <p class="guangdong-note">广东公司案例基于公司名称关键词匹配，可能存在部分误差</p>
+        {% if analysis.guangdong_cases and analysis.guangdong_cases|length > 0 %}
+            {% for case in analysis.guangdong_cases %}
+            <div class="case">
+                <h3>{{ case['股票简称'] }} - {{ case['交易标的'] }}</h3>
+                <p><strong>股票代码:</strong> {{ case['股票代码'] }}</p>
+                <p><strong>交易标的:</strong> {{ case['交易标的'] }}</p>
+                <p><strong>卖方:</strong> {{ case['卖方'] }}</p>
+                <p><strong>买方:</strong> {{ case['买方'] }}</p>
+                <p><strong>交易金额(万):</strong> <span class="amount-highlight">{{ case['交易金额 (万)'] }} {{ case['币种'] }}</span></p>
+                <p><strong>并购方式:</strong> {{ case['并购方式'] }}</p>
+                <p><strong>相关链接：</strong> {{ case['相关']|safe }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>-</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>三、并购数据列表详情</h2>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>股票代码</th>
+                        <th>股票简称</th>
+                        <th>相关</th>
+                        <th>交易标的</th>
+                        <th>卖方</th>
+                        <th>买方</th>
+                        <th>交易金额 (万)</th>
+                        <th>币种</th>
+                        <th>并购方式</th>
+                        <th>最新公告日</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row['序号'] }}</td>
+                        <td>{{ row['股票代码'] }}</td>
+                        <td>{{ row['股票简称'] }}</td>
+                        <td class="related-links">{{ row['相关_换行']|safe }}</td>
+                        <td>{{ row['交易标的'] }}</td>
+                        <td>{{ row['卖方'] }}</td>
+                        <td>{{ row['买方'] }}</td>
+                        <td class="amount-highlight">{{ row['交易金额 (万)'] }}</td>
+                        <td>{{ row['币种'] }}</td>
+                        <td>{{ row['并购方式'] }}</td>
+                        <td>{{ row['最新公告日'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>四、数据说明</h2>
+        <ul class="note">
+            <li>数据来源：东方财富网数据中心并购重组板块</li>
+            <li>数据更新时间：{{ generate_time }}</li>
+            <li>广东公司案例基于公司名称关键词匹配，可能存在部分误差</li>
+        </ul>
+    </div>
+    </div>
+</body>
+</html>
