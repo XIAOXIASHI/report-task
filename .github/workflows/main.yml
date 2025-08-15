@@ -18,21 +18,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: 安装系统依赖
+    
+      - name: 缓存APT依赖
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
+    
+      - name: 安装系统依赖和字体
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wkhtmltopdf libxrender1 libfontconfig1
-      
+          sudo apt-get update && \
+          sudo apt-get install -y wkhtmltopdf libxrender1 libfontconfig1 fonts-wqy-zenhei && \
+          sudo chmod +x /usr/bin/wkhtmltopdf && \
+          wkhtmltopdf --version
+    
       - name: 设置Python环境
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-          
+          cache: 'pip'  # 启用pip缓存
+
       - name: 安装python依赖
         run: |
           python -m pip install --upgrade pip
-          pip install requests pandas jinja2 pdfkit python-dotenv  # 添加了python-dotenv
+          pip install -r requirements.txt
 
       - name: 验证wkhtmltopdf安装
         run: |
