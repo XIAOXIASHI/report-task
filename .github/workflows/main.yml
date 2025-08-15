@@ -1,7 +1,9 @@
 name: 并购数据日报__html_pdf
 on:
   schedule:
-    - cron: '00 08 * * *'  # （北京时间8点）
+    - cron: '00 08 * * *'  # （早上8点）
+    - cron: '00 17 * * *'  # （下午5点）
+    - cron: '20 22 * * *'  # （下午5点）
   
   workflow_dispatch:
     inputs:
