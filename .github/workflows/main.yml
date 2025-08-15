@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: '00 08 * * *'  # （早上8点）
     - cron: '00 17 * * *'  # （下午5点）
-    - cron: '20 22 * * *'  # （下午5点）
+    - cron: '20 22 * * *'  # （下午22点20）
   
   workflow_dispatch:
     inputs:
