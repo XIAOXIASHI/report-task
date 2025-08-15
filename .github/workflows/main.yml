@@ -1,17 +1,17 @@
-name: 公司并购日报生成
+name: 并购数据日报__html_pdf
 on:
   schedule:
-    - cron: '0 2 * * *'  # 国际标准时间2点 = 北京时间10点
-    workflow_dispatch:      # 手动触发（新增）
-      inputs:
-        test_mode:
-          description: '是否以测试模式运行'
-          required: true
-          default: 'yes'
-          type:choice
-          options:
-            - 'yes'
-            - 'no'
+    - cron: '00 08 * * *'  # 定时触发
+  workflow_dispatch:      # 手动触发（新增）
+    inputs:
+      test_mode:
+        description: '是否以测试模式运行'
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
 jobs:
   run-script:
     runs-on: ubuntu-latest
