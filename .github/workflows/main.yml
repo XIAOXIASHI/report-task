@@ -48,7 +48,7 @@ jobs:
     
           
       - name: 执行脚本
-        run: python 生成并购重组PDF报告.py
+        run: python bg_report_html_pdf.py
         
       - name: 保存结果
         uses: actions/upload-artifact@v4  # 已更新为v4版本
